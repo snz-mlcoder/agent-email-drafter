@@ -1,0 +1,18 @@
+[project]
+name = "agent-email-drafter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "langchain>=1.4.7",
+    "langchain-openai>=1.7.3",
+    "langgraph>=1.2.18",
+    "pydantic>=2.14.1",
+    "python-dotenv>=1.2.4",
+]
+
+
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
