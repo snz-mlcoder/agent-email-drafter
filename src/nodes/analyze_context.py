@@ -11,8 +11,7 @@ dotenv.load_dotenv()
 
 def analyze_context(state: EmailState)-> dict:
     """
-   reads from the state and returns a dictionary with the context, recipient, and tone of the email.
-    """
+    Analyze the email context and provide a brief summary of the purpose, key points, call to action, and subject line from the given state."""
     llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0, max_tokens=300) 
     prompt = PromptTemplate(
         input_variables=["context", "recipient", "tone"],
