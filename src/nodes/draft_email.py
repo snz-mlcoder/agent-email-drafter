@@ -19,9 +19,19 @@ def draft_email(state: EmailState) -> dict:
     key_points = brief.key_points
     call_to_action = brief.call_to_action
     subject_line = brief.subject_line
+    critique = state.get("critique")
+
+    if critique is not None and not critique.approved:
+        revision_note = (
+            f"previous draft: {state.get('draft', '')}\n\n"
+            f"Reviewer feedback: {critique.feedback}\n\n"
+            "rewrite the email based on the feedback"
+        )
+    else:
+        revision_note = ""
 
     prompt = PromptTemplate(
-        input_variables=["tone", "recipient", "purpose", "key_points", "call_to_action", "subject_line"],
+        input_variables=["tone", "recipient", "purpose", "key_points", "call_to_action", "subject_line", "revision_note"],
         template="You are an expert email writer. Draft an email with the following details:\n\n"
                  "Tone: {tone}\n"
                  "Recipient: {recipient}\n"
@@ -29,10 +39,11 @@ def draft_email(state: EmailState) -> dict:
                  "Key Points: {key_points}\n"
                  "Call to Action: {call_to_action}\n"
                  "Subject Line: {subject_line}\n"
+                 "Critique: {revision_note}\n"
                  "write the email in a professional and engaging manner, around 200 words , good subject line and closing statment"
     )
 
     llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7)
-    llm_response = llm.invoke(prompt.format(tone=tone, recipient=recipient, purpose=purpose, key_points=key_points, call_to_action=call_to_action, subject_line=subject_line)).content
+    llm_response = llm.invoke(prompt.format(tone=tone, recipient=recipient, purpose=purpose, key_points=key_points, call_to_action=call_to_action, subject_line=subject_line, revision_note=revision_note)).content
     return {"draft": llm_response}
  
