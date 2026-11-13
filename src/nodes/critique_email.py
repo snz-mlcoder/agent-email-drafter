@@ -35,9 +35,14 @@ def critique_email(state: EmailState) -> dict:
                 "Provide constructive feedback on how to improve the email, focusing on clarity, engagement, and effectiveness."
     )
 
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0, max_tokens=300, timeout=30, max_retries=2)
     llm_response = llm.with_structured_output(Critique).invoke(prompt.format(draft=draft, tone=tone, recipient=recipient, purpose=purpose, key_points=key_points, call_to_action=call_to_action, subject_line=subject_line))
- 
-    return {"critique": llm_response}
 
+
+    revision_count = state.get("revision_count", 0)
+    if not llm_response.approved:
+        revision_count += 1
+    return {"critique": llm_response, "revision_count": revision_count}
+
+ 
 
