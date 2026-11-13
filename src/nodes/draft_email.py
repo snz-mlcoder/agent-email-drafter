@@ -43,7 +43,7 @@ def draft_email(state: EmailState) -> dict:
                  "write the email in a professional and engaging manner, around 200 words , good subject line and closing statment"
     )
 
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7, max_tokens=300, timeout=30, max_retries=2)
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.7, timeout=30, max_retries=2)
     llm_response = llm.invoke(prompt.format(tone=tone, recipient=recipient, purpose=purpose, key_points=key_points, call_to_action=call_to_action, subject_line=subject_line, revision_note=revision_note)).content
     return {"draft": llm_response}
  
